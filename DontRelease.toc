@@ -1,0 +1,16 @@
+## Interface: 120005
+## Title: DontRelease
+## Notes: Movable "Do Not Release" warning over the death dialog on raid wipes. Configurable text, color, sound, threshold, and close modifiers.
+## Author: WowDonf
+## Version: v1.0.0
+## SavedVariablesPerCharacter: DontReleaseDB
+## IconTexture: Interface\AddOns\DontRelease\Icon
+## AddonCompartmentFunc: DontRelease_OnCompartmentClick
+## AddonCompartmentFuncOnEnter: DontRelease_OnCompartmentEnter
+## AddonCompartmentFuncOnLeave: DontRelease_OnCompartmentLeave
+## Category-enUS: DontRelease
+## X-Curse-Project-ID: 1554856
+## X-Wago-ID: bGoyOp60
+
+DontRelease.lua
+Options.lua
