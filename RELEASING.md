@@ -10,17 +10,24 @@ line, and CHANGELOG entries all use the `v` prefix.
    about to release.
 2. Bump `## Version:` in `DontRelease.toc` to match the tag you'll push.
 3. Sanity-check Lua syntax locally:
+
    ```bash
    for f in *.lua; do luac -p "$f" || break; done
    ```
+
 4. Commit and push to `main`.
 
 ## Cutting a release
 
 ```bash
 git tag -a v1.0.1 -m "v1.0.1"
-git push origin v1.0.1
+git push origin --follow-tags
 ```
+
+`--follow-tags` pushes the current branch plus any annotated tags
+reachable from `HEAD`. If you ever forget to push `main` before tagging,
+this still gets the tag's commit onto the remote so the release
+workflow's `actions/checkout` step doesn't fail.
 
 The workflow `.github/workflows/release.yml` triggers on tag push and runs
 `BigWigsMods/packager@v2`. It will:
@@ -40,8 +47,8 @@ Configure under Settings → Secrets and variables → Actions:
 
 | Secret | Source |
 | --- | --- |
-| `CF_API_KEY` | https://legacy.curseforge.com/account/api-tokens |
-| `WAGO_API_TOKEN` | https://addons.wago.io/account/apikeys |
+| `CF_API_KEY` | <https://legacy.curseforge.com/account/api-tokens> |
+| `WAGO_API_TOKEN` | <https://addons.wago.io/account/apikeys> |
 | `GITHUB_TOKEN` | (auto-provided; nothing to configure) |
 
 ## Project IDs
@@ -49,7 +56,7 @@ Configure under Settings → Secrets and variables → Actions:
 Set these in `DontRelease.toc` so the packager knows which CurseForge and
 Wago projects to publish to:
 
-```
+```bash
 ## X-Curse-Project-ID: 123456
 ## X-Wago-ID: abc123def
 ```
