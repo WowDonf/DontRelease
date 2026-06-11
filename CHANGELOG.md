@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.1.0
+
+- **New alert sound — "Defeat"**: an original somber game-over sting (bells
+  over a soft minor cadence). Brings the bundled total to 11 sounds.
+  Selectable from the Sound dropdown and `/dnr` test, routable through the
+  same volume channels as the others.
+- **Patch 12.0.7 ("Revelations") compatibility**: TOC now declares both
+  `120005` and `120007`, so the addon loads un-flagged on the current live
+  client and the 12.0.7 client. No code changes were required — the new
+  trailing `encounterUnitStatus` parameter on `ENCOUNTER_END` is
+  backward-compatible with existing wipe detection.
+
 ## v1.0.0
 
 Initial release.

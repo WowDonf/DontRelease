@@ -136,6 +136,7 @@ ns.SOUNDS = {
     { key = "Boop1",  label = "Boop 1 (single high)",  file = "Interface\\AddOns\\DontRelease\\Sounds\\boop1.ogg" },
     { key = "Boop2",  label = "Boop 2 (double high)",  file = "Interface\\AddOns\\DontRelease\\Sounds\\boop2.ogg" },
     { key = "Boop3",  label = "Boop 3 (ascending)",    file = "Interface\\AddOns\\DontRelease\\Sounds\\boop3.ogg" },
+    { key = "Defeat", label = "Defeat (somber theme)",  file = "Interface\\AddOns\\DontRelease\\Sounds\\defeat.ogg" },
 }
 
 -- Resolve a sound key to the actual playable identifier + how to play it.
@@ -722,6 +723,16 @@ end
 -- ---------------------------------------------------------------------
 -- Addon compartment hooks (the dropdown next to the minimap that lists
 -- installed addons). Wired up via the AddonCompartmentFunc* TOC fields.
+--
+-- Known harmless quirk: when DontRelease is DISABLED, the client never
+-- loads this file, so these globals are never defined -- yet the client
+-- still builds a compartment entry from the TOC metadata. Hovering that
+-- entry then looks up _G["DontRelease_OnCompartmentEnter"], finds nil,
+-- and (on 12.0 beta builds) throws "attempt to call a nil value" in
+-- Blizzard_Minimap/AddonCompartment.lua instead of nil-checking first.
+-- This is a client-side bug, NOT ours: nothing here can guard against it
+-- because none of this Lua runs while the addon is disabled. With the
+-- addon enabled (its normal state) the handlers exist and hovering works.
 -- ---------------------------------------------------------------------
 function DontRelease_OnCompartmentClick(_, button)
     if button == "RightButton" then
