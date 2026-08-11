@@ -1,7 +1,7 @@
 # DontRelease
 
-Blocks accidental release on raid wipes — large warning over the death
-dialog, and Enter is disabled while it's up.
+Blocks accidental release on raid wipes — a large warning that physically
+covers the death dialog so the Release button can't be clicked.
 
 ![DontRelease](assets/Banner-1280.png)
 
@@ -11,11 +11,10 @@ When you die during a raid wipe and the standard release-spirit dialog
 appears, DontRelease shows a large warning over it: **DO NOT RELEASE**,
 with "Wait for battle res or raid leader's call." underneath.
 
-While the warning is visible, the **Enter key on the death popup is
-disabled** — the addon flips off the popup's default-button keyboard
-accelerator so a reflexive Enter (e.g. mashing keys to clear a
-focus-stolen chat box) can't release you. Normal behavior restores the
-moment the warning is dismissed.
+The warning is sized to the popup and drawn above it with mouse input
+enabled, so while it's up the **Release Spirit button can't be clicked** —
+a reflexive click lands on the warning instead. Normal release works
+again the moment the warning is dismissed.
 
 The frame itself is independently movable, scalable, recolorable, and
 can be configured to require a deliberate **hold** of Shift / Ctrl / Alt
@@ -29,13 +28,14 @@ don't pop the warning. While you're dead, the addon also polls once per
 second so a wipe that develops ten seconds after your own death still
 triggers the warning. The frame auto-hides the instant a battle res
 request arrives, and can suppress itself entirely when a self-res is
-available (Soulstone, Shaman Reincarnation).
+available (Soulstone, Reincarnation, or anything else the client offers
+on the death dialog).
 
 ## Features
 
-- **Blocks Enter on the death popup** while the warning is up, so a
-  reflexive keystroke or chat focus-loss can't release you. Restored
-  automatically as soon as the warning is dismissed.
+- **Covers the Release Spirit button** while the warning is up, so a
+  reflexive click can't release you. Normal release is available again as
+  soon as the warning is dismissed.
 - **Movable, scalable warning frame** with configurable title text,
   subtitle text, color, and scale (0.5x – 3.0x).
 - **Wipe detection** by threshold of dead raid members (configurable 1 –
@@ -47,10 +47,10 @@ available (Soulstone, Shaman Reincarnation).
   single press. A gold progress bar at the bottom of the frame fills as
   the user holds.
 - **Smart suppression**: hides on incoming battle res request; hides when
-  Soulstone or Shaman Reincarnation is available (each toggleable).
-- **10 alert sounds**: 3 Blizzard alarms plus 7 bundled custom .ogg files
-  (4 Womp variants + 3 Boop variants). Routable through Master / SFX /
-  Music / Ambience / Dialog volume channels.
+  a self-res is available (each toggleable).
+- **11 alert sounds**: 3 Blizzard alarms plus 8 bundled custom .ogg files
+  (4 Womp variants, 3 Boop variants, and Defeat). Routable through Master
+  / SFX / Music / Ambience / Dialog volume channels.
 - **`/dnr` and `/dontrelease` slash commands** for every setting: toggle,
   threshold, scale, sound, reset, status.
 - **Addon compartment entry** next to the minimap. Left-click opens
@@ -82,7 +82,7 @@ Type `/dnr` to open the options window.
 
 ## Compatibility
 
-- WoW Midnight (Interface 120005, patch 12.x)
+- WoW Midnight patch 12.1.0 "Curse of Ula'tek" (Interface 120100)
 - No required dependencies, no embedded libraries, no taint
 - No combat-log decisions, no protected APIs
 

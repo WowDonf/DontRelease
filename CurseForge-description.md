@@ -2,12 +2,12 @@
 Paste this into CurseForge's "Project Summary" field (NOT this file's body).
 Plain text only, ~150 characters:
 
-Blocks accidental release on raid wipes. Big warning over the death dialog and disables Enter so a reflexive keystroke can't drop you.
+Blocks accidental release on raid wipes. A big warning covers the death dialog so a reflexive click can't drop you out of the fight.
 
 Alternatives if the primary doesn't fit the listing well:
-  - "Wipe-aware release guard: warning frame over the death dialog plus disabled Enter key. Optional hold-to-dismiss for extra friction."
-  - "Big 'DO NOT RELEASE' warning that actually blocks the Enter key on the death popup so accidental release on wipes is impossible."
-  - "Stops accidental Enter-to-release on raid wipes. Movable warning frame, hold-to-dismiss option, ten configurable alert sounds."
+  - "Wipe-aware release guard: a warning frame that physically covers the Release button. Optional hold-to-dismiss for extra friction."
+  - "Big 'DO NOT RELEASE' warning that sits on top of the death popup, so accidental release on wipes takes a deliberate act."
+  - "Stops accidental release on raid wipes. Movable warning frame, hold-to-dismiss option, eleven configurable alert sounds."
 ------------------------------------------------------------------------- -->
 
 # DontRelease
@@ -20,11 +20,10 @@ defaults to "DO NOT RELEASE" with "Wait for battle res or raid leader's
 call." underneath. Both lines, the color, the size, and the position are
 configurable.
 
-**While the warning is up, the Enter key on the death popup is
-disabled** — the popup's default-button keyboard accelerator is
-suppressed for as long as the warning is visible, so a reflexive Enter
-(or a press-Enter-to-clear-chat keystroke) won't release you. Normal
-behavior restores the instant the warning is dismissed.
+**While the warning is up, the Release Spirit button can't be clicked** —
+the frame is sized to the popup and drawn above it with mouse input
+enabled, so a reflexive click lands on the warning instead of on Release.
+Normal release is available the instant the warning is dismissed.
 
 The "wipe" is detected by counting dead raid members against a threshold
 you set (default 3), plus an immediate trigger on the `ENCOUNTER_END`
@@ -34,7 +33,8 @@ that develops ten seconds after your own death still triggers the
 warning (and trash-pull wipes, which have no `ENCOUNTER_END` to
 backstop, get caught too). The frame auto-hides the instant a battle
 res request arrives, and can be configured to suppress itself entirely
-when a self-res is available (Soulstone, Shaman Reincarnation).
+when a self-res is available (Soulstone, Reincarnation, or anything else
+the client offers you on the death dialog).
 
 ---
 
@@ -42,13 +42,12 @@ when a self-res is available (Soulstone, Shaman Reincarnation).
 
 Two layers of protection:
 
-1. **Enter is dead while the warning is up.** Most popup-dismiss
-   workflows in WoW are "press Enter for the default action" — and the
-   default action on the death popup is "Release Spirit." DontRelease
-   flips that off whenever the warning is visible, so the single most
-   common accidental-release input (a reflex Enter, or an
-   Enter-to-clear-chat after a focus-stolen edit box) just doesn't work.
-   The accelerator is restored the moment the warning is dismissed.
+1. **The Release button is physically unreachable while the warning is
+   up.** The frame is sized to whatever the death popup currently
+   measures — including when a Soulstone or Reincarnation button widens
+   it — and drawn above it with mouse input enabled. A reflex click at
+   the spot where "Release Spirit" was hits the warning instead. The
+   popup is fully usable again the moment the warning is dismissed.
 
 2. **Optional hold-to-dismiss on the warning itself.** Enable "hold to
    close" and you must hold Shift / Ctrl / Alt for a configurable
@@ -62,7 +61,7 @@ Two layers of protection:
 ## What's bundled
 
 - **3 Blizzard alarm sounds** (Alarm 1 / 2 / 3)
-- **7 custom .ogg sounds**
+- **8 custom .ogg sounds**
 - All routable through **Master / SFX / Music / Ambience / Dialog** volume
   channels so the sound follows whichever in-game volume slider the user
   already cares about.
@@ -70,8 +69,7 @@ Two layers of protection:
 - Scale slider 0.5x – 3.0x
 - Wipe-threshold slider 1 – 30 dead raiders
 - Hold-to-close with adjustable 0.5 – 5.0 second hold duration
-- Suppression of the warning when self-res is available
-  (Soulstone / Reincarnation) — optional
+- Suppression of the warning when a self-res is available — optional
 
 ---
 

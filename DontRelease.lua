@@ -281,16 +281,14 @@ end
 
 frame:HookScript("OnHide", ResetHold)
 
--- Block the death popup's Enter-to-release shortcut while the warning is up.
--- StaticPopupDialogs["DEATH"].noKeys = true makes StaticPopup_OnKeyDown ignore
--- Enter/Space so the player can't reflexively dismiss the popup underneath
--- without first acknowledging the warning.
-frame:HookScript("OnShow", function()
-    StaticPopupDialogs["DEATH"].noKeys = true
-end)
-frame:HookScript("OnHide", function()
-    StaticPopupDialogs["DEATH"].noKeys = nil
-end)
+-- No keyboard guard is needed on the death popup, and none is possible.
+-- In-game, StaticPopup_OnKeyDown is only installed on a dialog that opts in
+-- via `enterClicksFirstButton`, and the DEATH dialog does not set it -- so
+-- Enter never clicks Release to begin with. (The flag that suppresses key
+-- handling is `ignoreKeys`; the old `noKeys` name this addon used to set is
+-- read by nothing.) What does need blocking is the mouse, and this frame
+-- handles that by covering the popup from a higher strata with mouse input
+-- enabled -- see ResizeToPopup.
 
 frame:SetScript("OnUpdate", function(self)
     if ns.testMode then return end -- don't auto-close in test mode
@@ -445,35 +443,25 @@ end
 -- ---------------------------------------------------------------------
 -- Self-resurrection detection
 -- ---------------------------------------------------------------------
-local REINCARNATION_SPELL_ID = 20608
-
-local function HasSoulstoneAvailable()
-    if HasSoulstone then
-        return HasSoulstone() and true or false
+-- C_DeathInfo.GetSelfResurrectOptions is what the default death dialog itself
+-- uses to build its resurrect buttons, so it covers every self-res source the
+-- client knows about (Soulstone, Reincarnation, ...) without special-casing
+-- spells per class. It returns nothing when there is nothing on offer.
+local function GetUsableSelfResOptions()
+    local options = C_DeathInfo.GetSelfResurrectOptions()
+    if not options then return nil end
+    local usable = {}
+    for _, option in ipairs(options) do
+        -- canUse filters options that exist but can't be taken right now
+        -- (Reincarnation still on cooldown, Soulstone already spent).
+        if option.canUse then usable[#usable + 1] = option end
     end
-    return false
-end
-
-local function HasReincarnationReady()
-    local _, class = UnitClass("player")
-    if class ~= "SHAMAN" then return false end
-
-    if not C_SpellBook.IsSpellInSpellBook(REINCARNATION_SPELL_ID) then
-        return false
-    end
-
-    local info = C_Spell.GetSpellCooldown(REINCARNATION_SPELL_ID)
-    -- nil info means "could not query" — treat as not-ready rather than
-    -- silently claiming ready and accidentally suppressing the warning.
-    -- duration > 1.5 filters the GCD; anything longer is a real cooldown.
-    if not info then return false end
-    return not info.duration or info.duration <= 1.5
+    return usable
 end
 
 local function HasSelfResAvailable()
-    if HasSoulstoneAvailable() then return true end
-    if HasReincarnationReady() then return true end
-    return false
+    local usable = GetUsableSelfResOptions()
+    return usable ~= nil and #usable > 0
 end
 ns.HasSelfResAvailable = HasSelfResAvailable
 
@@ -696,9 +684,12 @@ SlashCmdList["DONTRELEASE"] = function(msg)
             local _, t = IsInInstance()
             print("  current zone:    " .. tostring(t))
             print("  dead raiders:    " .. CountDeadRaiders())
+            local resNames = {}
+            for _, option in ipairs(GetUsableSelfResOptions() or {}) do
+                resNames[#resNames + 1] = option.name
+            end
             print("  self-res avail:  " .. tostring(HasSelfResAvailable()) ..
-                  " (soulstone=" .. tostring(HasSoulstoneAvailable()) ..
-                  ", reincarnate=" .. tostring(HasReincarnationReady()) .. ")")
+                  " (" .. (#resNames > 0 and table.concat(resNames, ", ") or "none") .. ")")
 
         else
             chatPrint("commands:")
@@ -724,15 +715,11 @@ end
 -- Addon compartment hooks (the dropdown next to the minimap that lists
 -- installed addons). Wired up via the AddonCompartmentFunc* TOC fields.
 --
--- Known harmless quirk: when DontRelease is DISABLED, the client never
--- loads this file, so these globals are never defined -- yet the client
--- still builds a compartment entry from the TOC metadata. Hovering that
--- entry then looks up _G["DontRelease_OnCompartmentEnter"], finds nil,
--- and (on 12.0 beta builds) throws "attempt to call a nil value" in
--- Blizzard_Minimap/AddonCompartment.lua instead of nil-checking first.
--- This is a client-side bug, NOT ours: nothing here can guard against it
--- because none of this Lua runs while the addon is disabled. With the
--- addon enabled (its normal state) the handlers exist and hovering works.
+-- AddonCompartmentMixin:RegisterAddons only builds an entry for an addon
+-- that is enabled, so a disabled DontRelease -- whose file never loads and
+-- whose handler globals therefore never exist -- gets no entry at all, and
+-- these never end up being looked up as nil. Each is called as
+-- handler(addonName, buttonNameOrFrame), hence the discarded first arg.
 -- ---------------------------------------------------------------------
 function DontRelease_OnCompartmentClick(_, button)
     if button == "RightButton" then
