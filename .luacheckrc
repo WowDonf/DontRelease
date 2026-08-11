@@ -19,7 +19,6 @@ globals = {
     "DontRelease_OnCompartmentEnter",
     "DontRelease_OnCompartmentLeave",
     -- Blizzard tables we mutate
-    "StaticPopupDialogs",  -- noKeys flip on the death popup
     "SlashCmdList",        -- /dnr handler registration
 }
 
@@ -39,9 +38,9 @@ read_globals = {
     -- Group / instance state
     "IsInRaid", "IsInInstance", "GetNumGroupMembers",
     -- Unit state
-    "UnitIsDeadOrGhost", "UnitExists", "UnitIsConnected", "UnitClass",
-    -- Spells / self-res
-    "C_SpellBook", "C_Spell", "HasSoulstone",
+    "UnitIsDeadOrGhost", "UnitExists", "UnitIsConnected",
+    -- Self-res
+    "C_DeathInfo",
     -- UI control
     "ReloadUI",
 }

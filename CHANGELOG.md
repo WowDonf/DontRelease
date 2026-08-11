@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.2.0
+
+- Updated for 12.1.0 (interface 120100). Dropped the 12.0.x numbers, so
+  this build is 12.1.0 only. The aura changes in this patch don't touch
+  anything the addon uses.
+- Fixed self-res suppression never seeing Soulstones. It was calling
+  `HasSoulstone()`, deprecated since 7.3.5 and no longer answering, so
+  only Reincarnation ever registered. Now uses
+  `C_DeathInfo.GetSelfResurrectOptions()`, which covers whatever the
+  death dialog is actually offering. `/dnr status` lists them by name.
+- Dropped the Enter-blocking code. It set `noKeys` on the death popup,
+  but that field is called `ignoreKeys` now, and the death popup doesn't
+  install a key handler at all unless it sets `enterClicksFirstButton`,
+  which it doesn't. So Enter was never releasing you in the first place
+  and there's no flag that would have changed that. No behavior change:
+  what stops an accidental release is the warning frame sitting on top of
+  the Release button. Fixed the readme and store page, which claimed
+  otherwise.
+
 ## v1.1.0
 
 - **New alert sound — "Defeat"**: an original somber game-over sting (bells
