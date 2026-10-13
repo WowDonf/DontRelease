@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.1
+
+- Updated for 12.1.5 "The Promise of Tomorrow" (interface 120105). The
+  TOC declares both `120100` and `120105`, so the addon loads un-flagged
+  on the 12.1.0 and 12.1.5 clients. No code changes: nothing in this
+  patch touches the death popup, `C_DeathInfo`, the Settings API, or the
+  sound calls the addon uses. The deprecated packages 12.1.5 removed
+  (`Blizzard_DeprecatedSoundScript` and the rest) only carried functions
+  like `PlayVocalErrorSoundID`, which the addon never called.
+
 ## v1.2.0
 
 - Updated for 12.1.0 (interface 120100). Dropped the 12.0.x numbers, so

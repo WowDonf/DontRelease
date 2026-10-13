@@ -82,6 +82,7 @@ Type `/dnr` to open the options window.
 
 ## Compatibility
 
+- WoW Midnight patch 12.1.5 "The Promise of Tomorrow" (Interface 120105)
 - WoW Midnight patch 12.1.0 "Curse of Ula'tek" (Interface 120100)
 - No required dependencies, no embedded libraries, no taint
 - No combat-log decisions, no protected APIs
